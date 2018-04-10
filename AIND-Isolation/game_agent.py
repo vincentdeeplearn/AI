@@ -265,8 +265,6 @@ class MinimaxPlayer(IsolationPlayer):
                 best_score = v
                 best_move = m
         return best_move
-        
-
 class AlphaBetaPlayer(IsolationPlayer):
     """Game-playing agent that chooses a move using iterative deepening minimax
     search with alpha-beta pruning. You must finish and test this player to
@@ -305,17 +303,21 @@ class AlphaBetaPlayer(IsolationPlayer):
         """
         self.time_left = time_left
         # TODO: finish this function!
-  
         best_move = (-1, -1)
-        depth=0
-        while(1>0):
-            try:
-                best_move=self.alphabeta(self, game, depth)
-                depth+=1
-            except SearchTimeout:
-                return best_move  # Handle any actions required after timeout as needed
         
+        try:
+            for depth in range(1,10000000):
+                self.search_depth=depth
+                return self.alphabeta(game,self.search_depth)
+                # The try/except block will automatically catch the exception
+                # raised when the timer is about to expire.
+                
+        except SearchTimeout:
+                pass  # Handle any actions required after timeout as needed
 
+        # Return the best move from the last completed search iteration
+        return best_move
+        
     def terminal_test(self,gameState):
         """ Return True if the game is over for the active player
         and False otherwise.
@@ -423,12 +425,13 @@ class AlphaBetaPlayer(IsolationPlayer):
         
         for m in game.get_legal_moves(game._active_player):
             # call has been updated with a depth limit
-            v = max(float("-inf"),self.min_value(game.forecast_move(m),0,alpha,beta))
+            #v = max(float("-inf"),self.min_value(game.forecast_move(m),0,alpha,beta))
+            v = self.min_value(game.forecast_move(m),0,alpha,beta)
             if best_score==None or v>best_score:
                 best_score=v
                 best_move=m
-            if beta !=None and beta<=best_score:
+            if beta<=best_score:
                 return best_move
-            if alpha==None or best_score>alpha:
+            if  best_score>alpha:
                 alpha=best_score
-        return best_move
+        return best_move        
