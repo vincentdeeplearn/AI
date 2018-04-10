@@ -307,13 +307,20 @@ class AlphaBetaPlayer(IsolationPlayer):
         # TODO: finish this function!
   
         best_move = (-1, -1)
-        depth=0
-        while(1>0):
+    
+
+        for depth in range(10000000):
+            self.search_depth=depth
             try:
-                best_move=self.alphabeta(self, game, depth)
-                depth+=1
+                # The try/except block will automatically catch the exception
+                # raised when the timer is about to expire.
+                return self.alphabeta(game,self.search_depth)
+
             except SearchTimeout:
-                return best_move  # Handle any actions required after timeout as needed
+                pass  # Handle any actions required after timeout as needed
+
+        # Return the best move from the last completed search iteration
+        return best_move
         
 
     def terminal_test(self,gameState):
